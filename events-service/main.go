@@ -19,5 +19,11 @@ func main() {
 	fmt.Println("Connecting to database")
 	dbhandler, _ := dblayer.NewPersistenceLayer(config.Databasetype, config.DBConnection)
 
-	log.Fatal(rest.ServeAPI(config.RestfulEndpoint, dbhandler))
+	httpErrChan, httptlsErrChan := rest.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndpoint, dbhandler)
+	select {
+	case err := <-httpErrChan:
+		log.Fatal("HTTP Error: ", err)
+	case err := <-httptlsErrChan:
+		log.Fatal("HTTPS Error: ", err)
+	}
 }

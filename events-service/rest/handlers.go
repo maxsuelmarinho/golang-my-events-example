@@ -19,14 +19,14 @@ func (eh *eventServiceHandler) findEventHandler(w http.ResponseWriter, r *http.R
 	vars := mux.Vars(r)
 	criteria, ok := vars["SearchCriteria"]
 	if !ok {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, `{error: No search criteria found, you can either search by id via /id/4 to search by name via /name/coldplayconcert}`)
 		return
 	}
 
 	searchKey, ok := vars["search"]
 	if !ok {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, `{error: No search keys found, you can either search by id via /id/4 to search by name via /name/coldplayconcert}`)
 		return
 	}
@@ -55,7 +55,7 @@ func (eh *eventServiceHandler) findEventHandler(w http.ResponseWriter, r *http.R
 func (eh *eventServiceHandler) allEventHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := eh.dbhandler.FindAllAvailableEvents()
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "{error: Error occurer while trying to find all available events %s}", err)
 		return
 	}
@@ -63,7 +63,7 @@ func (eh *eventServiceHandler) allEventHandler(w http.ResponseWriter, r *http.Re
 	w.Header().Set("Content-Type", "application/json;charset=utf8")
 	err = json.NewEncoder(w).Encode(&events)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "{error: Error occured while trying to find all available events to JSON %s}", err)
 	}
 }
@@ -72,14 +72,14 @@ func (eh *eventServiceHandler) newEventHandler(w http.ResponseWriter, r *http.Re
 	event := persistence.Event{}
 	err := json.NewDecoder(r.Body).Decode(&event)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "{error: error occured while decoding event data %s}", err)
 		return
 	}
 
 	id, err := eh.dbhandler.AddEvent(event)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "{error: error occured while persisting event %d %s}", id, err)
 		return
 	}
