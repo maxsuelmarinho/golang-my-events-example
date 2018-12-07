@@ -1,13 +1,14 @@
 package rest
 
 import (
+	"golang-my-events-example/events-service/persistence"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func ServerAPI(endpoint string) error {
-	handler := &eventServiceHandler{}
+func ServeAPI(endpoint string, dbHandler persistence.DatabaseHandler) error {
+	handler := newEventHandler(dbHandler)
 	r := mux.NewRouter()
 	eventsrouter := r.PathPrefix("/events").Subrouter()
 	eventsrouter.Methods("GET").Path("/{SearchCriteria}/{search}").HandlerFunc(handler.findEventHandler)
