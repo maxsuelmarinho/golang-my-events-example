@@ -7,8 +7,10 @@ services:
       - "8181:8181"
     links:
       - mongodb
+      - rabbitmq
     depends_on:
       - mongodb
+      - rabbitmq
 
   mongodb:
     image: mongo:latest
@@ -21,3 +23,13 @@ services:
     ports:
       - "27017:27017"
     command: mongod --smallfiles --logpath=/dev/null
+
+  # management UI:
+  # user: guest
+  # pass: guest
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: "rabbitmq"
+    ports:
+      - "5617:5617"
+      - "15672:15672" # management UI
