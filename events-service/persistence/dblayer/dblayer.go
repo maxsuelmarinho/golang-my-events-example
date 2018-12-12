@@ -8,8 +8,9 @@ import (
 type DBTYPE string
 
 const (
-	MONGODB  DBTYPE = "mongodb"
-	DYNAMODB DBTYPE = "dynamodb"
+	MONGODB    DBTYPE = "mongodb"
+	DYNAMODB   DBTYPE = "dynamodb"
+	DOCUMENTDB DBTYPE = "documentdb"
 )
 
 func NewPersistenceLayer(options DBTYPE, connection string) (persistence.DatabaseHandler, error) {

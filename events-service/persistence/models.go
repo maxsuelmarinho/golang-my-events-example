@@ -1,6 +1,24 @@
 package persistence
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"fmt"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
+type User struct {
+	ID       bson.ObjectId `bson:"_id"`
+	First    string
+	Last     string
+	Age      int
+	Bookings []Booking
+}
+
+type Booking struct {
+	Date    int64
+	EventID []byte
+	Seats   int
+}
 
 type Event struct {
 	ID        bson.ObjectId `bson:"_id"`
@@ -25,4 +43,8 @@ type Hall struct {
 	Name     string `json:"name"`
 	Location string `json:"location,omitempty"`
 	Capacity int    `json:"capacity"`
+}
+
+func (u *User) String() string {
+	return fmt.Sprintf("id: %s, first_name: %s, last_name: %s, Age: %d, Bookings: %v", u.ID, u.First, u.Last, u.Age, u.Bookings)
 }
