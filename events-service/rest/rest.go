@@ -1,14 +1,16 @@
 package rest
 
 import (
+	"golang-my-events-example/events-service/msgqueue"
 	"golang-my-events-example/events-service/persistence"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func ServeAPI(endpoint string, tlsendpoint string, dbHandler persistence.DatabaseHandler) (chan error, chan error) {
-	handler := newEventHandler(dbHandler)
+func ServeAPI(endpoint string, tlsendpoint string, dbHandler persistence.DatabaseHandler, eventEmitter msgqueue.EventEmitter) (chan error, chan error) {
+	handler := newEventHandler(dbHandler, eventEmitter)
+
 	r := mux.NewRouter()
 	eventsrouter := r.PathPrefix("/events").Subrouter()
 	eventsrouter.Methods("GET").Path("/{SearchCriteria}/{search}").HandlerFunc(handler.findEventHandler)
