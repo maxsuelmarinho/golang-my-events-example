@@ -23,7 +23,7 @@ func (a *amqpEventEmitter) setup() error {
 	return channel.ExchangeDeclare("events", "topic", true, false, false, false, nil)
 }
 
-func NewAMQPeventEmitter(conn *amqp.Connection) (msgqueue.EventEmitter, error) {
+func NewAMQPEventEmitter(conn *amqp.Connection) (msgqueue.EventEmitter, error) {
 	emitter := &amqpEventEmitter{
 		connection: conn,
 	}
