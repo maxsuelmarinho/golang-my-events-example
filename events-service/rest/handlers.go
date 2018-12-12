@@ -4,15 +4,19 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"golang-my-events-example/events-service/contracts"
+	"golang-my-events-example/events-service/msgqueue"
 	"golang-my-events-example/events-service/persistence"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 )
 
 type eventServiceHandler struct {
-	dbhandler persistence.DatabaseHandler
+	dbhandler    persistence.DatabaseHandler
+	eventEmitter msgqueue.EventEmitter
 }
 
 func (eh *eventServiceHandler) FindEventHandler(w http.ResponseWriter, r *http.Request) {
@@ -83,10 +87,25 @@ func (eh *eventServiceHandler) NewEventHandler(w http.ResponseWriter, r *http.Re
 		fmt.Fprintf(w, "{error: error occured while persisting event %d %s}", id, err)
 		return
 	}
+
+	message := contracts.EventCreatedEvent{
+		ID:         hex.EncodeToString(id),
+		Name:       event.Name,
+		LocationID: string(event.Location.ID),
+		Start:      time.Unix(event.StartDate, 0),
+		End:        time.Unix(event.EndDate, 0),
+	}
+
+	eh.eventEmitter.Emit(&message)
+
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(&event)
 }
 
-func NewEventHandler(databaseHandler persistence.DatabaseHandler) *eventServiceHandler {
+func newEventHandler(databaseHandler persistence.DatabaseHandler, eventEmitter msgqueue.EventEmitter) *eventServiceHandler {
 	return &eventServiceHandler{
-		dbhandler: databaseHandler,
+		dbhandler:    databaseHandler,
+		eventEmitter: eventEmitter,
 	}
 }

@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"golang-my-events-example/events-service/configuration"
 	"golang-my-events-example/events-service/dblayer"
+	msgqueue_amqp "golang-my-events-example/events-service/msgqueue/amqp"
 	"golang-my-events-example/events-service/rest"
 	"log"
+
+	"github.com/streadway/amqp"
 )
 
 func main() {
@@ -16,10 +19,20 @@ func main() {
 	flag.Parse()
 
 	config, _ := configuration.ExtractConfiguration(*confPath)
+	conn, err := amqp.Dial(config.AMQPMessageBroker)
+	if err != nil {
+		panic(err)
+	}
+
+	emitter, err := msgqueue_amqp.NewAMQPEventEmitter(conn)
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println("Connecting to database")
 	dbhandler, _ := dblayer.NewPersistenceLayer(config.Databasetype, config.DBConnection)
 
-	httpErrChan, httptlsErrChan := rest.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndpoint, dbhandler)
+	httpErrChan, httptlsErrChan := rest.ServeAPI(config.RestfulEndpoint, config.RestfulTLSEndpoint, dbhandler, emitter)
 	select {
 	case err := <-httpErrChan:
 		log.Fatal("HTTP Error: ", err)
