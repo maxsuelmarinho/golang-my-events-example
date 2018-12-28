@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		panic("could not establish AMQP connection: " + err.Error())
 	}
+	defer connection.Close()
 
 	channel, err := connection.Channel()
 	if err != nil {
@@ -44,6 +45,4 @@ func main() {
 	if err != nil {
 		panic("error while publishing message: " + err.Error())
 	}
-
-	defer connection.Close()
 }

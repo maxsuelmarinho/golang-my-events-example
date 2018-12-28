@@ -17,6 +17,7 @@ func main() {
 	if err != nil {
 		panic("could not establish AMQP connection: " + err.Error())
 	}
+	defer connection.Close()
 
 	channel, err := connection.Channel()
 	if err != nil {
@@ -51,7 +52,5 @@ func main() {
 	for msg := range msgs {
 		fmt.Println("message received: " + string(msg.Body))
 		msg.Ack(false)
-	}
-
-	defer connection.Close()
+	}	
 }

@@ -11,5 +11,5 @@ type EventCreatedEvent struct {
 }
 
 func (e *EventCreatedEvent) EventName() string {
-	return "eventCreated"
+	return "event.created"
 }

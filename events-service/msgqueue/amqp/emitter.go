@@ -17,7 +17,6 @@ func (a *amqpEventEmitter) setup() error {
 	if err != nil {
 		return err
 	}
-
 	defer channel.Close()
 
 	return channel.ExchangeDeclare("events", "topic", true, false, false, false, nil)
@@ -41,7 +40,8 @@ func (a *amqpEventEmitter) Emit(event msgqueue.Event) error {
 	if err != nil {
 		return err
 	}
-
+	// AMQP channel is not thread-safe. So, calling the event emitter's Emit() method from multiple go-routines
+	// might lead to strange and unpredictable results. That's why a new channel is created for each published message.
 	defer channel.Close()
 
 	jsonBody, err := json.Marshal(event)

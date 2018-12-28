@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"golang-my-events-example/events-service/configuration"
-	"golang-my-events-example/events-service/dblayer"
 	msgqueue_amqp "golang-my-events-example/events-service/msgqueue/amqp"
+	"golang-my-events-example/events-service/persistence/dblayer"
 	"golang-my-events-example/events-service/rest"
 	"log"
 

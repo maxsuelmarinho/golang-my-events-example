@@ -19,7 +19,7 @@ type eventServiceHandler struct {
 	eventEmitter msgqueue.EventEmitter
 }
 
-func (eh *eventServiceHandler) FindEventHandler(w http.ResponseWriter, r *http.Request) {
+func (eh *eventServiceHandler) findEventHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	criteria, ok := vars["SearchCriteria"]
 	if !ok {
@@ -56,7 +56,7 @@ func (eh *eventServiceHandler) FindEventHandler(w http.ResponseWriter, r *http.R
 	json.NewEncoder(w).Encode(&event)
 }
 
-func (eh *eventServiceHandler) AllEventHandler(w http.ResponseWriter, r *http.Request) {
+func (eh *eventServiceHandler) allEventHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := eh.dbhandler.FindAllAvailableEvents()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -72,7 +72,7 @@ func (eh *eventServiceHandler) AllEventHandler(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func (eh *eventServiceHandler) NewEventHandler(w http.ResponseWriter, r *http.Request) {
+func (eh *eventServiceHandler) newEventHandler(w http.ResponseWriter, r *http.Request) {
 	event := persistence.Event{}
 	err := json.NewDecoder(r.Body).Decode(&event)
 	if err != nil {
