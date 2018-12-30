@@ -33,3 +33,9 @@ services:
     ports:
       - "5617:5617"
       - "15672:15672" # management UI
+
+  kafka:
+    image: spotify/kafka
+    container_name: "kafka"
+    ports:
+      - "9092:9092"

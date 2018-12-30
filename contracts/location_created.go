@@ -13,3 +13,7 @@ type LocationCreatedEvent struct {
 func (c *LocationCreatedEvent) EventName() string {
 	return "location.created"
 }
+
+func (e *LocationCreatedEvent) PartitionKey() string {
+	return e.ID
+}
