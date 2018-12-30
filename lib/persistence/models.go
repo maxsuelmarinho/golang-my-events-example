@@ -14,6 +14,10 @@ type User struct {
 	Bookings []Booking
 }
 
+func (u *User) String() string {
+	return fmt.Sprintf("id: %s, first_name: %s, last_name: %s, Age: %d, Bookings: %v", u.ID, u.First, u.Last, u.Age, u.Bookings)
+}
+
 type Booking struct {
 	Date    int64
 	EventID []byte
@@ -22,7 +26,7 @@ type Booking struct {
 
 type Event struct {
 	ID        bson.ObjectId `bson:"_id"`
-	Name      string
+	Name      string        `dynamodbav:"EventName"`
 	Duration  int
 	StartDate int64
 	EndDate   int64
@@ -43,8 +47,4 @@ type Hall struct {
 	Name     string `json:"name"`
 	Location string `json:"location,omitempty"`
 	Capacity int    `json:"capacity"`
-}
-
-func (u *User) String() string {
-	return fmt.Sprintf("id: %s, first_name: %s, last_name: %s, Age: %d, Bookings: %v", u.ID, u.First, u.Last, u.Age, u.Bookings)
 }

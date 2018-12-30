@@ -3,6 +3,10 @@ package rest
 import (
 	"golang-my-events-example/lib/msgqueue"
 	"golang-my-events-example/lib/persistence"
+	"net/http"
+	"time"
+
+	"github.com/gorilla/mux"
 )
 
 func ServeAPI(listenAddress string, database persistence.DatabaseHandler, eventEmitter msgqueue.EventEmitter) {
@@ -10,10 +14,10 @@ func ServeAPI(listenAddress string, database persistence.DatabaseHandler, eventE
 	r.Methods("post").Path("/events/{eventID}/bookings").Handler(&CreateBookingHandler{eventEmitter, database})
 
 	srv := http.Server{
-		Handler: r,
-		Addr: listenAddress,
+		Handler:      r,
+		Addr:         listenAddress,
 		WriteTimeout: 2 * time.Second,
-		ReadTimeout: 1 * time.Second,
+		ReadTimeout:  1 * time.Second,
 	}
 
 	srv.ListenAndServe()

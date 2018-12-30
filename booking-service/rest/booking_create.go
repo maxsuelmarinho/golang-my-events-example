@@ -7,7 +7,10 @@ import (
 	"golang-my-events-example/contracts"
 	"golang-my-events-example/lib/msgqueue"
 	"golang-my-events-example/lib/persistence"
+	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type eventRef struct {
@@ -29,7 +32,7 @@ type CreateBookingHandler struct {
 	database     persistence.DatabaseHandler
 }
 
-func (h *CreateBookingHandler) ServeHTTP(w http.ResponseWritter, r *http.Request) {
+func (h *CreateBookingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	routeVars := mux.Vars(r)
 	eventID, ok := routeVars["eventID"]
 	if !ok {
@@ -77,5 +80,5 @@ func (h *CreateBookingHandler) ServeHTTP(w http.ResponseWritter, r *http.Request
 	w.Header().Set("Content-Type", "application/json;charset=utf8")
 	w.WriteHeader(http.StatusCreated)
 
-	json.NewDecoder(w).Encode(&booking)
+	json.NewEncoder(w).Encode(&booking)
 }

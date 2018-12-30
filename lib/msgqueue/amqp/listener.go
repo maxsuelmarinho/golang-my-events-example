@@ -1,17 +1,22 @@
 package amqp
 
 import (
-	"encoding/json"
 	"fmt"
-	"golang-my-events-example/events-service/contracts"
-	"golang-my-events-example/events-service/msgqueue"
+	amqphelper "golang-my-events-example/lib/helper/amqp"
+	"golang-my-events-example/lib/msgqueue"
+	"os"
+	"time"
 
 	"github.com/streadway/amqp"
 )
 
+const eventNameHeader = "x-event-name"
+
 type amqpEventListener struct {
 	connection *amqp.Connection
+	exchange   string
 	queue      string
+	mapper     msgqueue.EventMapper
 }
 
 func (a *amqpEventListener) setup() error {
@@ -21,8 +26,16 @@ func (a *amqpEventListener) setup() error {
 	}
 	defer channel.Close()
 
+	err = channel.ExchangeDeclare(a.exchange, "topic", true, false, false, false, nil)
+	if err != nil {
+		return err
+	}
+
 	_, err = channel.QueueDeclare(a.queue, true, false, false, false, nil)
-	return err
+	if err != nil {
+		return fmt.Errorf("could not declare queue %s", a.queue, err)
+	}
+	return nil
 }
 
 func (a *amqpEventListener) Listen(eventNames ...string) (<-chan msgqueue.Event, <-chan error, error) {
@@ -32,8 +45,9 @@ func (a *amqpEventListener) Listen(eventNames ...string) (<-chan msgqueue.Event,
 	}
 	defer channel.Close()
 
+	// create binding between queue and exchange for each listened event type
 	for _, eventName := range eventNames {
-		if err := channel.QueueBind(a.queue, eventName, "events", false, nil); err != nil {
+		if err := channel.QueueBind(a.queue, eventName, a.exchange, false, nil); err != nil {
 			return nil, nil, fmt.Errorf("could not bind event %s to queue %s: %s", eventName, a.queue, err)
 		}
 	}
@@ -49,7 +63,7 @@ func (a *amqpEventListener) Listen(eventNames ...string) (<-chan msgqueue.Event,
 	go func() {
 		for msg := range msgs {
 			// Map message to actual event struct
-			rawEventName, ok := msg.Headers["x-event-name"]
+			rawEventName, ok := msg.Headers[eventNameHeader]
 			if !ok {
 				errors <- fmt.Errorf("message did not contain x-event-name header")
 				msg.Nack(false, false)
@@ -63,32 +77,48 @@ func (a *amqpEventListener) Listen(eventNames ...string) (<-chan msgqueue.Event,
 				continue
 			}
 
-			var event msgqueue.Event
-			switch eventName {
-			case "event.created":
-				event = new(contracts.EventCreatedEvent)
-			default:
-				errors <- fmt.Errorf("event type %s is unknown", eventName)
-				continue
-			}
-
-			err := json.Unmarshal(msg.Body, event)
+			event, err := a.mapper.MapEvent(eventName, msg.Body)
 			if err != nil {
-				errors <- err
+				errors <- fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
+				msg.Nack(false, false)
 				continue
 			}
 
 			events <- event
+			msg.Ack(false)
 		}
 	}()
 
 	return events, errors, nil
 }
 
-func NewAMQPEventListener(conn *amqp.Connection, queue string) (msgqueue.EventListener, error) {
-	listener := &amqpEventListener{
+func NewAMQPListenerFromEnvironment() (msgqueue.EventListener, error) {
+	var url string
+	var exchange string
+	var queue string
+
+	if url = os.Getenv("AMQP_URL"); url == "" {
+		url = "amqp://localhost:5672"
+	}
+
+	if exchange = os.Getenv("AMQP_EXCHANGE"); exchange == "" {
+		exchange = "example"
+	}
+
+	if queue = os.Getenv("AMQP_QUEUE"); queue == "" {
+		queue = "example"
+	}
+
+	conn := <-amqphelper.RetryConnect(url, 5*time.Second)
+	return NewAMQPEventListener(conn, exchange, queue)
+}
+
+func NewAMQPEventListener(conn *amqp.Connection, exchange string, queue string) (msgqueue.EventListener, error) {
+	listener := amqpEventListener{
 		connection: conn,
+		exchange:   exchange,
 		queue:      queue,
+		mapper:     msgqueue.NewEventMapper(),
 	}
 
 	err := listener.setup()
@@ -96,5 +126,9 @@ func NewAMQPEventListener(conn *amqp.Connection, queue string) (msgqueue.EventLi
 		return nil, err
 	}
 
-	return listener, nil
+	return &listener, nil
+}
+
+func (a *amqpEventListener) Mapper() msgqueue.EventMapper {
+	return a.mapper
 }
