@@ -1,8 +1,8 @@
 package rest
 
 import (
-	"golang-my-events-example/events-service/msgqueue"
-	"golang-my-events-example/events-service/persistence"
+	"golang-my-events-example/lib/msgqueue"
+	"golang-my-events-example/lib/persistence"
 	"log"
 	"net/http"
 

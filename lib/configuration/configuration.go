@@ -3,7 +3,7 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
-	"golang-my-events-example/events-service/persistence/dblayer"
+	"golang-my-events-example/lib/persistence/dblayer"
 	"os"
 )
 
