@@ -37,7 +37,12 @@ func ServeAPI(endpoint string, tlsendpoint string, dbHandler persistence.Databas
 
 	eventsrouter.Methods("GET").Path("/{SearchCriteria}/{search}").HandlerFunc(handler.findEventHandler)
 	eventsrouter.Methods("GET").Path("").HandlerFunc(handler.allEventHandler)
+	eventsrouter.Methods("GET").Path("/{eventID}").HandlerFunc(handler.oneEventHandler)
 	eventsrouter.Methods("POST").Path("").HandlerFunc(handler.newEventHandler)
+
+	locationRouter := r.PathPrefix("/locations").Subrouter()
+	locationRouter.Methods("GET").Path("").HandlerFunc(handler.allLocationHandler)
+	locationRouter.Methods("POST").Path("").HandlerFunc(handler.newLocationHandler)
 
 	httpErrChan := make(chan error)
 	httptlsErrChan := make(chan error)

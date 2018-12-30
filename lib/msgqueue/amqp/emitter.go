@@ -3,13 +3,20 @@ package amqp
 import (
 	"encoding/json"
 	"fmt"
-	"golang-my-events-example/events-service/msgqueue"
+	"golang-my-events-example/lib/msgqueue"
 
 	"github.com/streadway/amqp"
 )
 
 type amqpEventEmitter struct {
 	connection *amqp.Connection
+	exchange   string
+	events     chan *emittedEvent
+}
+
+type emittedevent struct {
+	event     msgqueue.Event
+	errorChan chan error
 }
 
 func (a *amqpEventEmitter) setup() error {

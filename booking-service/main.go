@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"golang-my-events-example/booking-service/listener"
+	"golang-my-events-example/booking-service/rest"
 	"golang-my-events-example/lib/configuration"
 	"golang-my-events-example/lib/msgqueue"
 	msgqueue_amqp "golang-my-events-example/lib/msgqueue/amqp"
@@ -38,5 +39,5 @@ func main() {
 	processor := listener.EventProcessr{eventListener, dbhandler}
 	go processor.ProcessEvents()
 
-	restServeAPI(config.RestfulEndpoint, dbhandler, eventEmitter)
+	rest.ServeAPI(config.RestfulEndpoint, dbhandler, eventEmitter)
 }

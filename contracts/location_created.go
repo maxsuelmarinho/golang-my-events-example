@@ -1,6 +1,6 @@
 package contracts
 
-import "golang-my-events-example/events-service/persistence"
+import "golang-my-events-example/lib/persistence"
 
 type LocationCreatedEvent struct {
 	ID      string             `json:"id"`
