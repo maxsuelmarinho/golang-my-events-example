@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -44,14 +45,16 @@ func ServeAPI(endpoint string, tlsendpoint string, dbHandler persistence.Databas
 	locationRouter.Methods("GET").Path("").HandlerFunc(handler.allLocationHandler)
 	locationRouter.Methods("POST").Path("").HandlerFunc(handler.newLocationHandler)
 
+	server := handlers.CORS()(r)
+
 	httpErrChan := make(chan error)
 	httptlsErrChan := make(chan error)
 	go func() {
-		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "cert.pem", "key.pem", r)
+		httptlsErrChan <- http.ListenAndServeTLS(tlsendpoint, "cert.pem", "key.pem", server)
 	}()
 
 	go func() {
-		httpErrChan <- http.ListenAndServe(endpoint, r)
+		httpErrChan <- http.ListenAndServe(endpoint, server)
 	}()
 
 	return httpErrChan, httptlsErrChan

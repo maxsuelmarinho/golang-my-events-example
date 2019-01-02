@@ -36,3 +36,24 @@ go run $GOROOT/src/crypto/tls/generate_cert.go --host=localhost [--duration :hou
 **Other informations:**
 
 * [How to set up a cluster](http://www.rabbitmq.com/clustering.html)
+
+## React project
+
+**Project initialize:**
+```
+npm init
+```
+
+**Add dependencies:**
+```
+npm install --save react@16 react-dom@16 @types/react@16 @types/react-dom@16 react-router-dom
+npm install --save whatwg-fetch promise-polyfill
+npm install --save-dev typescript awesome-typescript-loader source-map-loader webpack webpack-cli http-server @types/react-router-dom
+npm install --save bootstrap@^3.3.7
+npm install --save whatwg-fetch promise-polyfill
+```
+
+**Running Webpack continuously:**
+```
+webpack --watch
+```
