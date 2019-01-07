@@ -77,6 +77,9 @@ func (h *CreateBookingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
 	h.database.AddBookingForUser([]byte("someUserID"), booking)
 
+	bookingCount.WithLabelValues(eventID, event.Name).Add(float64(bookingRequest.Seats))
+	seatsPerBooking.Observe(float64(bookingRequest.Seats))
+
 	w.Header().Set("Content-Type", "application/json;charset=utf8")
 	w.WriteHeader(http.StatusCreated)
 
