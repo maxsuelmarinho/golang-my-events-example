@@ -1,6 +1,7 @@
 import * as React from "react";
 import {EventList} from "./event_list";
 import {Event} from "../models/event";
+import {Loader} from "./loader";
 
 export interface EventListContainerProps {
     eventListURL: string;
@@ -20,21 +21,23 @@ export class EventListContainer extends React.Component<EventListContainerProps,
             events: []
         };
 
-        fetch(p.eventListURL)
+        fetch(p.eventListURL + "/api/events", {method: "GET"})
             .then<Event[]>(response => response.json())
             .then(events => {
                 this.setState({
                     loading: false,
                     events: events
-                });
-            });
+                })
+            })
     }
 
     render() {
-        if (this.state.loading) {
-            return <div>Loading...</div>
-        }
+        return <Loader loading={this.state.loading} message="Loading events...">
+            <EventList events={this.state.events} onEventBooked={e => this.handleEventBooked(e)} />
+        </Loader>        
+    }
 
-        return <EventList events={this.state.events} />;
+    private handleEventBooked(e: Event) {
+        console.log("booking event...");
     }
 }

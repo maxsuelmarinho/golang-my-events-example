@@ -1,14 +1,14 @@
 export interface Event {
-    ID: string;
-    Name: string;    
-    StartDate: number;
-    EndDate: number;    
-    Location: {
-        ID: string;
-        Name: string;
-        Address: string;
-        Country: string;
-        OpenTime: number;
-        CloseTime: number;
+    id: string;
+    name: string;    
+    startDate: number;
+    endDate: number;    
+    location: {
+        id: string;
+        name: string;
+        address: string;
+        country: string;
+        openTime: number;
+        closeTime: number;
     };    
 }

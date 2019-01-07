@@ -19,7 +19,7 @@ export class EventBookingFormContainer extends React.Component<EventBookingFormC
 
         this.state = {state: "loading"};
 
-        fetch(p.eventServiceURL + "/events/" + p.eventID)
+        fetch(p.eventServiceURL + "/api/events/" + p.eventID)
             .then<Event>(response => response.json())
             .then(event => {
                 this.setState({
@@ -50,7 +50,7 @@ export class EventBookingFormContainer extends React.Component<EventBookingFormC
     }
 
     private handleSubmit(seats: number) {
-        const url = this.props.bookingServiceURL + "/events/" + this.props.eventID + "/bookings";
+        const url = this.props.bookingServiceURL + "/api/events/" + this.props.eventID + "/bookings";
         const payload = {seats: seats};
 
         this.setState({
