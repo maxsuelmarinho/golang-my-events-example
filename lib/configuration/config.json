@@ -2,5 +2,7 @@
     "databasetype": "mongodb",
     "dbconnection": "mongodb://mongodb",
     "restfulapi_endpoint": "0.0.0.0:8181",
-    "restfulapi_tlsendpoint": "0.0.0.0:9191"
+    "restfulapi_tlsendpoint": "0.0.0.0:9191",
+    "message_broker_type": "amqp",
+    "amqp_message_broker": "amqp://guest:guest@rabbitmq:5672"
 }

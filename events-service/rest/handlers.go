@@ -58,6 +58,7 @@ func (eh *eventServiceHandler) findEventHandler(w http.ResponseWriter, r *http.R
 }
 
 func (eh *eventServiceHandler) allEventHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Listing all events...")
 	events, err := eh.dbhandler.FindAllAvailableEvents()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -103,26 +104,26 @@ func (eh *eventServiceHandler) newEventHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	id, err := eh.dbhandler.AddEvent(event)
+	persistedEvent, err := eh.dbhandler.AddEvent(event)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "{error: error occured while persisting event %d %s}", id, err)
+		fmt.Fprintf(w, "{error: error occured while persisting event %s}", err)
 		return
 	}
 
 	message := contracts.EventCreatedEvent{
-		ID:         hex.EncodeToString(id),
-		Name:       event.Name,
-		LocationID: string(event.Location.ID),
-		Start:      time.Unix(event.StartDate, 0),
-		End:        time.Unix(event.EndDate, 0),
+		ID:         string(persistedEvent.ID),
+		Name:       persistedEvent.Name,
+		LocationID: string(persistedEvent.Location.ID),
+		Start:      time.Unix(persistedEvent.StartDate, 0),
+		End:        time.Unix(persistedEvent.EndDate, 0),
 	}
 
 	eh.eventEmitter.Emit(&message)
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(&event)
+	json.NewEncoder(w).Encode(&persistedEvent)
 }
 
 func (eh *eventServiceHandler) allLocationHandler(w http.ResponseWriter, r *http.Request) {
@@ -134,6 +135,7 @@ func (eh *eventServiceHandler) allLocationHandler(w http.ResponseWriter, r *http
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	json.NewEncoder(w).Encode(locations)
 }
 

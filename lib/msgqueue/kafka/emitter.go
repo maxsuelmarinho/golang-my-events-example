@@ -2,7 +2,12 @@ package kafka
 
 import (
 	"encoding/json"
+	"golang-my-events-example/lib/helper/kafka"
 	"golang-my-events-example/lib/msgqueue"
+	"log"
+	"os"
+	"strings"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -18,12 +23,12 @@ func NewKafkaEventEmitterFromEnvironment() (msgqueue.EventEmitter, error) {
 		brokers = strings.Split(brokerList, ",")
 	}
 
-	client := <-kafka.RetryConnect(brokers, 5 * time.Second)
+	client := <-kafka.RetryConnect(brokers, 5*time.Second)
 	return NewKafkaEventEmitter(client)
 }
 
 func NewKafkaEventEmitter(client sarama.Client) (msgqueue.EventEmitter, error) {
-	producer, err := sarama.NewSyncProducerFromclient(client)
+	producer, err := sarama.NewSyncProducerFromClient(client)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +43,7 @@ func NewKafkaEventEmitter(client sarama.Client) (msgqueue.EventEmitter, error) {
 func (e *kafkaEventEmitter) Emit(event msgqueue.Event) error {
 	envelope := messageEnvelope{
 		event.EventName(),
-		event
+		event,
 	}
 	jsonBody, err := json.Marshal(&envelope)
 	if err != nil {
@@ -51,6 +56,8 @@ func (e *kafkaEventEmitter) Emit(event msgqueue.Event) error {
 	}
 
 	log.Printf("published message with topic %s: %v", event.EventName(), jsonBody)
-	partitionNumber, offset, err = e.producer.SendMessage(msg)
+
+	//partitionNumber, offset, err = e.producer.SendMessage(msg)
+	_, _, err = e.producer.SendMessage(msg)
 	return err
 }

@@ -1,28 +1,38 @@
 version: '3.1'
-services:
-  events-service:
-    build: events-service/
-    image: maxsuelmarinho/my-events:events-service-0.1
-    ports:
-      - "8181:8181"
-    links:
-      - mongodb
-      - rabbitmq
-    depends_on:
-      - mongodb
-      - rabbitmq
+networks:
+  my-events:
+  monitoring:
 
-  mongodb:
-    image: mongo:latest
-    container_name: "mongodb"
-    environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
+volumes:
+  prometheus-data:
+  grafana-data:
+
+services:
+  # UI: http://localhost:9090
+  prometheus:
+    image: prom/prometheus:v1.6.1
+    container_name: "prometheus"
     volumes:
-      - ./mongo/data/db:/data/db
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
     ports:
-      - "27017:27017"
-    command: mongod --smallfiles --logpath=/dev/null
+      - "9090:9090"
+    networks:
+     - monitoring
+     - my-events
+
+  # Default credentials:
+  # username: admin
+  # password: admin
+  grafana:
+    image: grafana/grafana:4.2.0
+    container_name: "grafana"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
 
   # management UI:
   # user: guest
@@ -31,11 +41,86 @@ services:
     image: rabbitmq:3-management
     container_name: "rabbitmq"
     ports:
-      - "5617:5617"
+      - "5672:5672"
       - "15672:15672" # management UI
+    networks:
+      - my-events
 
   kafka:
     image: spotify/kafka
     container_name: "kafka"
     ports:
       - "9092:9092"
+    networks:
+      - my-events
+  
+  event-db:
+    image: mongo:latest
+    container_name: "events-db"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    ports:
+      - "27017:27017"
+    #volumes:
+    #  - ./mongo/events/data/db:/data/db
+    command: mongod --smallfiles --logpath=/dev/null
+    networks:
+      - my-events
+
+  event-service:
+    build: 
+      context: events-service/
+      dockerfile: Dockerfile.scratch
+    image: maxsuelmarinho/my-events:events-service-0.1
+    ports:
+      - "8181:8181"
+      - "18181:18181"
+    depends_on:
+      - event-db
+      - rabbitmq
+    environment:
+      AMQP_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+      MONGO_URL: "mongodb://events-db/events"
+      LISTEN_URL: "0.0.0.0:8181"
+    networks:
+      - my-events
+
+  booking-service:
+    build: booking-service/
+    image: maxsuelmarinho/my-events:booking-service-0.1
+    ports:
+      - "8282:8282"
+      - "18282:18282"
+    depends_on:
+      - booking-db
+      - rabbitmq
+    environment:
+      AMQP_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+      MONGO_URL: "mongodb://booking-db/bookings"
+    networks:
+      - my-events
+
+  booking-db:
+    image: mongo:latest
+    container_name: "booking-db"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    #volumes:
+    #  - ./mongo/booking/data/db:/data/db
+    command: mongod --smallfiles --logpath=/dev/null
+    networks:
+      - my-events
+
+  frontend:
+    build: myevents-frontend/
+    image: maxsuelmarinho/my-events:frontend-0.1
+    ports:
+      - "8080:80"
+    depends_on:
+      - event-service
+      - booking-service
+    networks:
+      - my-events  
+  

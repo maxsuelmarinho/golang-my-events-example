@@ -7,11 +7,11 @@ import (
 )
 
 type User struct {
-	ID       bson.ObjectId `bson:"_id"`
-	First    string
-	Last     string
-	Age      int
-	Bookings []Booking
+	ID       bson.ObjectId `bson:"_id" json:"id"`
+	First    string        `json:"first"`
+	Last     string        `json:"last"`
+	Age      int           `json:"age"`
+	Bookings []Booking     `json:"bookings"`
 }
 
 func (u *User) String() string {
@@ -19,28 +19,28 @@ func (u *User) String() string {
 }
 
 type Booking struct {
-	Date    int64
-	EventID []byte
-	Seats   int
+	Date    int64  `json:"date"`
+	EventID []byte `json:"eventId"`
+	Seats   int    `json:"seats"`
 }
 
 type Event struct {
-	ID        bson.ObjectId `bson:"_id"`
-	Name      string        `dynamodbav:"EventName"`
-	Duration  int
-	StartDate int64
-	EndDate   int64
-	Location  Location
+	ID        bson.ObjectId `bson:"_id" json:"id"`
+	Name      string        `dynamodbav:"EventName" json:"name"`
+	Duration  int           `json:"duration"`
+	StartDate int64         `json:"startDate"`
+	EndDate   int64         `json:"endDate"`
+	Location  Location      `json:"location"`
 }
 
 type Location struct {
-	ID        bson.ObjectId `bson:"_id"`
-	Name      string
-	Address   string
-	Country   string
-	OpenTime  int
-	CloseTime int
-	Halls     []Hall
+	ID        bson.ObjectId `bson:"_id" json:"id"`
+	Name      string        `json:"name"`
+	Address   string        `json:"address"`
+	Country   string        `json:"country"`
+	OpenTime  int           `json:"openTime"`
+	CloseTime int           `json:"closeTime"`
+	Halls     []Hall        `json:"halls"`
 }
 
 type Hall struct {

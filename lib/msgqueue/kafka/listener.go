@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"golang-my-events-example/lib/helper/kafka"
+
 	"github.com/Shopify/sarama"
 )
 
@@ -44,16 +46,16 @@ func NewKafkaEventListenerFromEnvironment() (msgqueue.EventListener, error) {
 	return NewKafkaEventListener(client, partitions)
 }
 
-func NewKafkaEventListener(client sarama.Client, partitions []int32) msgqueue.EventListener {
+func NewKafkaEventListener(client sarama.Client, partitions []int32) (msgqueue.EventListener, error) {
 	consumer, err := sarama.NewConsumerFromClient(client)
 	if err != nil {
 		return nil, err
 	}
 
 	listener := &kafkaEventListener{
-		consumer:    consumer,
-		partitiions: partitions,
-		mapper:      msgqueue.NewEventMapper(),
+		consumer:   consumer,
+		partitions: partitions,
+		mapper:     msgqueue.NewEventMapper(),
 	}
 
 	return listener, nil
@@ -68,7 +70,7 @@ func (k *kafkaEventListener) Listen(events ...string) (<-chan msgqueue.Event, <-
 
 	partitions := k.partitions
 	if len(partitions) == 0 {
-		partitions, err = k.consumer.partitions(topic)
+		partitions, err = k.consumer.Partitions(topic)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -77,7 +79,7 @@ func (k *kafkaEventListener) Listen(events ...string) (<-chan msgqueue.Event, <-
 	log.Printf("topic %s has partitions: %v", topic, partitions)
 
 	for _, partition := range partitions {
-		offset := 0
+		var offset int64
 		consumer, err := k.consumer.ConsumePartition(topic, partition, offset)
 		if err != nil {
 			return nil, nil, err

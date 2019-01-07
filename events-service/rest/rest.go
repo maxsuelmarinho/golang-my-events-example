@@ -41,7 +41,7 @@ func ServeAPI(endpoint string, tlsendpoint string, dbHandler persistence.Databas
 	eventsrouter.Methods("GET").Path("/{eventID}").HandlerFunc(handler.oneEventHandler)
 	eventsrouter.Methods("POST").Path("").HandlerFunc(handler.newEventHandler)
 
-	locationRouter := r.PathPrefix("/locations").Subrouter()
+	locationRouter := api.PathPrefix("/locations").Subrouter()
 	locationRouter.Methods("GET").Path("").HandlerFunc(handler.allLocationHandler)
 	locationRouter.Methods("POST").Path("").HandlerFunc(handler.newLocationHandler)
 
