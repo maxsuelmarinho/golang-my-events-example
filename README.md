@@ -130,3 +130,170 @@ go_memstats_alloc_bytes
 rate(process_cpu_seconds_total[1m])
 sum(myevents_bookings_count) by (eventName)
 ```
+
+## Kubernetes
+
+### Kube Control configuration
+
+```
+> cat ~/.kube/config
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: ~/.minikube/ca.crt
+    server: https://192.168.99.100:8443
+  name: minikube
+contexts:
+- context:
+    cluster: minikube
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate: ~/.minikube/client.crt
+    client-key: ~/.minikube/client.key
+```
+
+### Cluster information
+
+```
+# Display cluster information
+> kubectl cluster-info
+Kubernetes master is running at https://192.168.99.100:8443
+KubeDNS is running at https://192.168.99.100:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+### Pods
+
+```
+> kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-test   1/1     Running   0          36s
+
+> kubectl apply -f k8s/examples/nginx-pod.yaml
+
+> kubectl get pods
+NAME         READY   STATUS              RESTARTS   AGE
+nginx-test   0/1     ContainerCreating   0          22s
+
+> kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+nginx-test   1/1     Running   0          36s
+
+# Delete pod
+> kubectl delete pod nginx-test
+pod "nginx-test" deleted
+```
+
+### Deployment
+
+```
+> kubectl apply -f k8s/examples/nginx-deployment.yaml
+deployment.apps/nginx-deployment created
+
+kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+nginx-deployment-7fc5849c-fjgrx   1/1     Running   0          31s
+nginx-deployment-7fc5849c-jrvb7   1/1     Running   0          31s
+
+> kubectl edit deployment nginx-deployment
+
+# Add two more instances
+> kubectl scale --replicas=4 deployment/nginx-deployment
+deployment.extensions/nginx-deployment scaled
+
+> kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+nginx-deployment-7fc5849c-2sfgc   1/1     Running   0          19s
+nginx-deployment-7fc5849c-fjgrx   1/1     Running   0          4m36s
+nginx-deployment-7fc5849c-jrvb7   1/1     Running   0          4m36s
+nginx-deployment-7fc5849c-rh2d9   1/1     Running   0          19s
+```
+
+### Services
+
+```
+> kubectl apply -f k8s/examples/nginx-service.yaml
+service/nginx created
+
+# List services
+> kubectl get services
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP        25h
+nginx        NodePort    10.106.36.63   <none>        80:30787/TCP   33s
+
+> minikube service nginx
+Opening kubernetes service default/nginx in default browser...
+```
+
+### Volumes
+
+```
+> kubectl apply -f k8s/examples/example-volume.yaml
+persistentvolume/volume01 created
+
+> kubectl get pv
+NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+volume01   1Gi        RWO,RWX        Retain           Available                                   2m22s
+
+> kubectl apply -f k8s/examples/example-volume-claim.yaml
+persistentvolumeclaim/my-data created
+
+> kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM             STORAGECLASS   REASON   AGE
+pvc-86970a30-148b-11e9-ba05-0800276224a1   1Gi        RWO            Delete           Bound       default/my-data   standard                46s
+volume01                                   1Gi        RWO,RWX        Retain           Available                                             9m50s
+```
+
+### RabbitMQ
+
+```
+> kubectl apply -f k8s/rabbitmq-statefulset.yaml
+statefulset.apps/rabbitmq created
+
+> kubectl get pods
+NAME                              READY   STATUS              RESTARTS   AGE
+rabbitmq-0                        0/1     ContainerCreating   0          38s
+
+> kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                     STORAGECLASS   REASON   AGE
+pvc-a6759cef-154a-11e9-ae98-0800276224a1   1Gi        RWO            Delete           Bound       default/data-rabbitmq-0   standard                70s
+
+> kubectl get pvc
+NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+data-rabbitmq-0   Bound    pvc-a6759cef-154a-11e9-ae98-0800276224a1   1Gi        RWO            standard       102s
+```
+
+```
+eval $(minikube docker-env)
+docker image build -t myevents/eventservice .
+```
+
+### Secret
+
+```
+kubectl create secret docker-registry my-private-registry-credentials \
+    --docker-server https://index.docker.io/v1/ \
+    --docker-username <my-username>
+    --docker-password <my-password>
+    --docker-email <my-email>
+```
+
+
+### Ingress
+
+```
+> minikube addons enable ingress
+ingress was successfully enabled
+
+> minikube ip
+192.168.99.100
+
+> minikube dashboard
+```

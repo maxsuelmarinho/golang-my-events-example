@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: eventservice
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        myevents/app: events
+        myevents/tier: api
+    spec:
+      containers:
+      - name: api
+        image: maxsuelmarinho/my-events:events-service-0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8181
+          name: http
+        env:
+        - name: MONGO_URL
+          value: mongodb://events-db/events
+        - name: AMQP_BROKER_URL
+          value: amqp://guest:guest@amqp-broker:5672/

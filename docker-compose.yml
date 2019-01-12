@@ -115,7 +115,7 @@ services:
 
   frontend:
     build: myevents-frontend/
-    image: maxsuelmarinho/my-events:frontend-0.1
+    image: maxsuelmarinho/my-events:frontend-0.4
     ports:
       - "8080:80"
     depends_on:

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      limits:
+        memory: 128Mi # 128 MB
+        cpu: 0.5 # CPU limit of one halt CPU Core
+    ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
