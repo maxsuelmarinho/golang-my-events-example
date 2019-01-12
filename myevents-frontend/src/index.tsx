@@ -8,11 +8,11 @@ import { EventBookingFormContainer } from "./components/event_booking_form_conta
 
 class App extends React.Component<{}, {}> {
     render() {
-        const eventList = () => <EventListContainer eventListURL="http://peon:8181" />
+        const eventList = () => <EventListContainer eventListURL={process.env.REACT_APP_EVENT_SERVICE_URL} />
         const eventBooking = ({match}: any) =>
             <EventBookingFormContainer eventID={match.params.id} 
-                eventServiceURL="http://peon:8181"
-                bookingServiceURL="http://peon:8282" />;
+                eventServiceURL={process.env.REACT_APP_EVENT_SERVICE_URL}
+                bookingServiceURL={process.env.REACT_APP_BOOKING_SERVICE_URL} />;
 
         return <Router>
             <div>
