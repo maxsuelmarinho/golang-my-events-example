@@ -11,6 +11,31 @@ go get github.com/Shopify/sarama
 go get github.com/prometheus/client_golang
 ```
 
+**Dependency Management (Dep):**
+```
+# Install
+> curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+# Initializing
+> dep init
+
+# Add a dependency
+> dep ensure -add github.com/gorilla/mux
+
+# Update a dependency
+> dep ensure -update github.com/gorilla/mux
+
+# Update all dependencies
+> dep ensure -update
+
+# Display the dependencies
+> dep status
+
+# Visualizing dependencies
+> sudo apt-get install -y graphviz
+> dep status -dot | dot -T png | display
+```
+
 **Build:**
 ```
 # Dynamically linked
