@@ -4,7 +4,7 @@ COPY ./ /app
 WORKDIR /app
 RUN npm install -g webpack typescript
 RUN npm install
-RUN npx webpack -env.ENVIRONMENT=development
+RUN npm run development
 
 FROM nginx:1.15-alpine
 

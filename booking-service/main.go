@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
+
 	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/listener"
 	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/rest"
 	"github.com/maxsuelmarinho/golang-my-events-example/lib/configuration"
 	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
 	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
 	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
-	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/streadway/amqp"
@@ -41,7 +42,10 @@ func main() {
 	dbhandler, err := dblayer.NewPersistenceLayer(config.Databasetype, config.DBConnection)
 	panicIfErr(err, "Could not connect to database")
 
-	processor := listener.EventProcessor{eventListener, dbhandler}
+	processor := listener.EventProcessor{
+		EventListener: eventListener,
+		Database:      dbhandler,
+	}
 	go processor.ProcessEvents()
 
 	go func() {

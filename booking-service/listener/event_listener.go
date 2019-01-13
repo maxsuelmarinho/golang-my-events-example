@@ -46,7 +46,7 @@ func (p *EventProcessor) handleEvent(event msgqueue.Event) {
 
 		p.Database.AddEvent(persistence.Event{ID: bson.ObjectId(e.ID), Name: e.Name})
 	case *contracts.LocationCreatedEvent:
-		log.Printf("location %s created: %s", e.ID, e)
+		log.Printf("location %s created: %v", e.ID, e)
 
 		if !bson.IsObjectIdHex(e.ID) {
 			log.Printf("event %v did not contain valid object ID", e)

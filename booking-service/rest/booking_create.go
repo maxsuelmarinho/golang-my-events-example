@@ -20,7 +20,7 @@ type eventRef struct {
 }
 
 type createBookingRequest struct {
-	Seats int `json:"seats`
+	Seats int `json:"seats"`
 }
 
 type createBookinhResponse struct {
