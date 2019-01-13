@@ -2,12 +2,13 @@ package kafka
 
 import (
 	"encoding/json"
-	"golang-my-events-example/lib/helper/kafka"
-	"golang-my-events-example/lib/msgqueue"
 	"log"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/helper/kafka"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
 
 	"github.com/Shopify/sarama"
 )

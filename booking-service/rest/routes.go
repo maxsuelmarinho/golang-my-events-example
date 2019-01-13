@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"golang-my-events-example/lib/msgqueue"
-	"golang-my-events-example/lib/persistence"
 	"net/http"
 	"time"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
 
 	"github.com/gorilla/handlers"
 

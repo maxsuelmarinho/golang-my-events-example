@@ -2,8 +2,8 @@ package builder
 
 import (
 	"errors"
-	"golang-my-events-example/lib/msgqueue"
-	"golang-my-events-example/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
 	"log"
 	"os"
 )

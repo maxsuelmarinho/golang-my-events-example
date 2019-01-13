@@ -3,7 +3,8 @@ package msgqueue
 import (
 	"encoding/json"
 	"fmt"
-	"golang-my-events-example/contracts"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/contracts"
 
 	"github.com/mitchellh/mapstructure"
 )

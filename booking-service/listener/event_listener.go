@@ -2,10 +2,11 @@ package listener
 
 import (
 	"fmt"
-	"golang-my-events-example/contracts"
-	"golang-my-events-example/lib/msgqueue"
-	"golang-my-events-example/lib/persistence"
 	"log"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/contracts"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
 
 	"gopkg.in/mgo.v2/bson"
 )

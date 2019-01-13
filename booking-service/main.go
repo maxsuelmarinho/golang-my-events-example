@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"golang-my-events-example/booking-service/listener"
-	"golang-my-events-example/booking-service/rest"
-	"golang-my-events-example/lib/configuration"
-	"golang-my-events-example/lib/msgqueue"
-	msgqueue_amqp "golang-my-events-example/lib/msgqueue/amqp"
-	"golang-my-events-example/lib/persistence/dblayer"
+	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/listener"
+	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/rest"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/configuration"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
 	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"

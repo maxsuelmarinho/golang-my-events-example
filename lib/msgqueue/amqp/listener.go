@@ -2,10 +2,11 @@ package amqp
 
 import (
 	"fmt"
-	amqphelper "golang-my-events-example/lib/helper/amqp"
-	"golang-my-events-example/lib/msgqueue"
 	"os"
 	"time"
+
+	amqphelper "github.com/maxsuelmarinho/golang-my-events-example/lib/helper/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
 
 	"github.com/streadway/amqp"
 )

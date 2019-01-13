@@ -3,9 +3,10 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
-	"golang-my-events-example/lib/persistence/dblayer"
 	"os"
 	"strings"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
 )
 
 var (
