@@ -2,10 +2,12 @@ package builder
 
 import (
 	"errors"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
 	"log"
 	"os"
+
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/kafka"
 )
 
 func NewEventListenerFromEnvironment() (msgqueue.EventListener, error) {
@@ -14,7 +16,7 @@ func NewEventListenerFromEnvironment() (msgqueue.EventListener, error) {
 
 	if url := os.Getenv("AMQP_URL"); url != "" {
 		log.Printf("connecting to AMQP broker at %s", url)
-		listener, err = amqp.NewEventListenerFromEnvironment()
+		listener, err = amqp.NewAMQPEventListenerFromEnvironment()
 		if err != nil {
 			return nil, err
 		}

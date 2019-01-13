@@ -1,4 +1,10 @@
 # Golang My Events Example
+<p align="left">
+    <a href="https://travis-ci.org/maxsuelmarinho/golang-my-events-example">
+        <img src="https://travis-ci.org/maxsuelmarinho/golang-my-events-example.svg?branch=master" alt="Build Status"></img>
+    </a>
+    <a href="https://goreportcard.com/report/github.com/maxsuelmarinho/golang-my-events-example"><img src="https://goreportcard.com/badge/github.com/maxsuelmarinho/golang-my-events-example" /></a>
+</p>
 
 ## Building applications
 

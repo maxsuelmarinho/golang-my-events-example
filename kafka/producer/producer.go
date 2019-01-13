@@ -1,8 +1,16 @@
 package main
 
-import "os"
-import "strings"
-import "github.com/Shopify/sarama"
+import (
+	"encoding/json"
+	"os"
+	"strings"
+
+	"github.com/Shopify/sarama"
+)
+
+type Message struct {
+	Content string `json:"content"`
+}
 
 func main() {
 	brokerList := os.Getenv("KAFKA_BROKERS")
@@ -20,5 +28,14 @@ func main() {
 		panic(err)
 	}
 
-	
+	jsonBody, _ := json.Marshal(&Message{
+		Content: "Hello, kafka!",
+	})
+
+	msg := &sarama.ProducerMessage{
+		Topic: "greeting.topic",
+		Value: sarama.ByteEncoder(jsonBody),
+	}
+
+	_, _, err = producer.SendMessage(msg)
 }

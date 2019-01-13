@@ -34,7 +34,7 @@ func (a *amqpEventListener) setup() error {
 
 	_, err = channel.QueueDeclare(a.queue, true, false, false, false, nil)
 	if err != nil {
-		return fmt.Errorf("could not declare queue %s", a.queue, err)
+		return fmt.Errorf("could not declare queue %s: %s", a.queue, err)
 	}
 	return nil
 }
@@ -93,7 +93,7 @@ func (a *amqpEventListener) Listen(eventNames ...string) (<-chan msgqueue.Event,
 	return events, errors, nil
 }
 
-func NewAMQPListenerFromEnvironment() (msgqueue.EventListener, error) {
+func NewAMQPEventListenerFromEnvironment() (msgqueue.EventListener, error) {
 	var url string
 	var exchange string
 	var queue string
