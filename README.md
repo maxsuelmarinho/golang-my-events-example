@@ -106,6 +106,7 @@ npm init
 npm install --save react@16 react-dom@16 @types/react@16 @types/react-dom@16 react-router-dom
 npm install --save whatwg-fetch promise-polyfill
 npm install --save-dev typescript awesome-typescript-loader source-map-loader webpack webpack-cli http-server @types/react-router-dom
+npm install --save-dev jest babel-jest babel-preset-env babel-preset-react react-test-renderer
 npm install --save bootstrap@^3.3.7
 npm install --save whatwg-fetch promise-polyfill
 ```
