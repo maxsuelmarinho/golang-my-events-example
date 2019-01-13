@@ -186,7 +186,9 @@ users:
     client-key: ~/.minikube/client.key
 ```
 
-**Useful commands:**
+### Useful commands
+
+**Cluster information:**
 ```
 # Display cluster information
 > kubectl cluster-info
@@ -196,8 +198,8 @@ KubeDNS is running at https://192.168.99.100:8443/api/v1/namespaces/kube-system/
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
+**Pods:**
 ```
-# Pods
 > kubectl get pods
 NAME         READY   STATUS    RESTARTS   AGE
 nginx-test   1/1     Running   0          36s
@@ -217,8 +219,8 @@ nginx-test   1/1     Running   0          36s
 pod "nginx-test" deleted
 ```
 
+**Deployment:**
 ```
-# Deployment
 > kubectl apply -f k8s/examples/nginx-deployment.yaml
 deployment.apps/nginx-deployment created
 
@@ -241,8 +243,8 @@ nginx-deployment-7fc5849c-jrvb7   1/1     Running   0          4m36s
 nginx-deployment-7fc5849c-rh2d9   1/1     Running   0          19s
 ```
 
+**Services:**
 ```
-# Services
 > kubectl apply -f k8s/examples/nginx-service.yaml
 service/nginx created
 
@@ -256,8 +258,8 @@ nginx        NodePort    10.106.36.63   <none>        80:30787/TCP   33s
 Opening kubernetes service default/nginx in default browser...
 ```
 
+**Volumes:**
 ```
-# Volumes
 > kubectl apply -f k8s/examples/example-volume.yaml
 persistentvolume/volume01 created
 
@@ -274,8 +276,8 @@ pvc-86970a30-148b-11e9-ba05-0800276224a1   1Gi        RWO            Delete     
 volume01                                   1Gi        RWO,RWX        Retain           Available                                             9m50s
 ```
 
+**RabbitMQ:**
 ```
-# RabbitMQ
 > kubectl apply -f k8s/rabbitmq-statefulset.yaml
 statefulset.apps/rabbitmq created
 
@@ -297,8 +299,8 @@ eval $(minikube docker-env)
 docker image build -t myevents/eventservice .
 ```
 
+**Secret:**
 ```
-# Secret
 kubectl create secret docker-registry my-private-registry-credentials \
     --docker-server https://index.docker.io/v1/ \
     --docker-username <my-username>
@@ -306,8 +308,8 @@ kubectl create secret docker-registry my-private-registry-credentials \
     --docker-email <my-email>
 ```
 
+**Ingress:**
 ```
-# Ingress
 > minikube addons enable ingress
 ingress was successfully enabled
 

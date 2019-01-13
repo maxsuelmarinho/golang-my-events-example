@@ -9,9 +9,12 @@ env:
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep version
   - dep ensure
 
-install: true  
+install:
+  - dep version
+  - dep ensure  
 
 scripts:
   - go vet $(go list ./... | grep -v vendor)
