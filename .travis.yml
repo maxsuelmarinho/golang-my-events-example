@@ -1,33 +1,42 @@
 sudo: required
-
 services:
   - docker
-
 language: go
-
 go:
   - 1.11
-
 env:
   global:
     - CGO_ENABLED=0 GOOS=linux GOARCH=amd64    
   matrix:
     - SERVICE=events-service
     - SERVICE=booking-service
-
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
 install:
-  - dep ensure  
-
+  - dep ensure
 scripts:
   - go vet $(go list ./... | grep -v vendor)
   - cd $SERVICE && go build
-  - docker image build -t maxsuelmarinho/my-events:$SERVICE-$TRAVIS_BRANCH $SERVICE  
-
+  - docker image build -t maxsuelmarinho/my-events:$SERVICE-$TRAVIS_BRANCH $SERVICE
 after_success:
   - if [ -n "${TRAVIS_TAG}" ]; then
       docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}";
       docker push maxsuelmarinho/my-events:$SERVICE-$TRAVIS_BRANCH;
+    fi
+
+---
+language: node_js
+node_js:
+  - 6
+env:
+  - SERVICE=myevents-frontend
+install:
+  - npm install -g webpack typescript
+  - npm install
+scripts:
+  - cd $SERVICE && npm run development
+after_success:
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker login -u="${DOCKER_USER}" -p="${DOCKER_PASSWORD}"
+      docker push maxsuelmarinho/my-events:${SERVICE}-${TRAVIS_BRANCH}
     fi
