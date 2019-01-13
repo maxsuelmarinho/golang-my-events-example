@@ -6,11 +6,8 @@ env:
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - dep version
-  - dep ensure
 
 install:
-  - dep version
   - dep ensure  
 
 scripts:
