@@ -324,3 +324,11 @@ ingress was successfully enabled
 
 > minikube dashboard
 ```
+
+## Travis
+
+**Useful commands:**
+```
+> gem install travis
+> travis encrypt DOCKER_PASSWORD="my-secret" --add
+```

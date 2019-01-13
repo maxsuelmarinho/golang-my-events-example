@@ -1,8 +1,19 @@
+sudo: required
+
+services:
+  - docker
+
 language: go
+
 go:
   - 1.11
+
 env:
-  - CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+  global:
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64    
+  matrix:
+    - SERVICE=events-service
+    - SERVICE=booking-service
 
 before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -12,5 +23,11 @@ install:
 
 scripts:
   - go vet $(go list ./... | grep -v vendor)
-  - cd events-service/ && go build
-  - cd booking-service/ && go build
+  - cd $SERVICE && go build
+  - docker image build -t maxsuelmarinho/my-events:$SERVICE-$TRAVIS_BRANCH $SERVICE  
+
+after_success:
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}";
+      docker push maxsuelmarinho/my-events:$SERVICE-$TRAVIS_BRANCH;
+    fi
