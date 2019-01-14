@@ -326,10 +326,36 @@ ingress was successfully enabled
 > minikube dashboard
 ```
 
+**Service Account:**
+```
+> kubectl create serviceaccount travis-ci
+serviceaccount/travis-ci created
+
+> kubectl describe serviceaccount travis-ci
+Name:                travis-ci
+Namespace:           default
+Labels:              <none>
+Annotations:         <none>
+Image pull secrets:  <none>
+Mountable secrets:   <my-token>
+Tokens:              <my-token>
+Events:              <none>
+
+> kubectl get secret <my-token> -o=yaml
+
+> echo "<token from above>" | base64 --decode
+
+> echo "<ca.crt from above>" | base64 --decode
+```
+
 ## Travis
 
 **Useful commands:**
 ```
 > gem install travis
 > travis encrypt DOCKER_PASSWORD="my-secret" --add
+```
+
+```
+curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>/version
 ```

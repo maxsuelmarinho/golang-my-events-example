@@ -1,0 +1,6 @@
+authtoken: ""
+tunnels:
+  test:
+    addr: ""
+    proto: http
+    bind_tls: true

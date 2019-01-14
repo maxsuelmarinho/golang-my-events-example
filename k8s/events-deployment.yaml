@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: eventservice
+  name: events-service
 spec:
   replicas: 2
   template:

@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+matrix:
+  include:    
+    - language: node_js
+      node_js:
+        - 6
+      env:
+        - SERVICE=myevents-frontend
+      install:
+        - npm install -g webpack typescript
+        - npm install
+      scripts:
+        - cd $SERVICE && npm run development
+      after_success:
+        - if [ -n "${TRAVIS_TAG}" ]; then
+            docker login -u="${DOCKER_USER}" -p="${DOCKER_PASSWORD}"
+            docker push maxsuelmarinho/my-events:${SERVICE}-${TRAVIS_BRANCH}
+          fi
