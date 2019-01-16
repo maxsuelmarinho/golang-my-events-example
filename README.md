@@ -359,3 +359,10 @@ Events:              <none>
 ```
 curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>/version
 ```
+
+## Gitlab
+
+```
+> git remote add gitlab ssh://git@localhost/root/golang-my-events-example.git 
+> git push gitlab master:master
+```

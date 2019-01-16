@@ -2,12 +2,48 @@ version: '3.1'
 networks:
   my-events:
   monitoring:
+  vcs:
 
 volumes:
   prometheus-data:
   grafana-data:
+  gitlab-config:
+  gitlab-data:
+
+secrets:
+  gitlab_root_password:
+    file: ./gitlab/root_password.txt
 
 services:
+  gitlab:
+    image: gitlab/gitlab-ce:9.1.1-ce.0
+    container_name: gitlab
+    environment:
+      - GITLAB_OMNIBUS_CONFIG="external_url 'http://peon/'; gitlab_rails['initial_root_password'] = File.read('/run/secrets/gitlab_root_password')"
+      - GITLAB_ROOT_PASSWORD="s3cr3t"
+    secrets:
+      - gitlab_root_password
+    volumes:
+      - gitlab-config:/etc/gitlab
+      - gitlab-data:/var/opt/gitlab
+    ports:
+      - "18080:80"
+      - "2244:22"
+    networks:
+      - vcs
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:v1.11.4
+    container_name: gitlab-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - gitlab
+    links:
+      - gitlab
+    networks:
+      - vcs
+
   # UI: http://localhost:9090
   prometheus:
     image: prom/prometheus:v1.6.1
@@ -53,7 +89,7 @@ services:
       - "9092:9092"
     networks:
       - my-events
-  
+
   event-db:
     image: mongo:latest
     container_name: "events-db"
@@ -69,7 +105,7 @@ services:
       - my-events
 
   event-service:
-    build: 
+    build:
       context: events-service/
       dockerfile: Dockerfile.scratch
     image: maxsuelmarinho/my-events:events-service-0.1
@@ -122,5 +158,4 @@ services:
       - event-service
       - booking-service
     networks:
-      - my-events  
-  
+      - my-events
