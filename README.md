@@ -155,6 +155,8 @@ docker volume ls
 # Volume usage example
 docker container run --rm -v my-volume:/my-volume debian:jessie /bin/bash -c "echo Hello > /my-volume/test.txt"
 docker container run --rm -v my-volume:/my-volume debian:jessie cat /my-volume/test.txt
+
+docker volume prune
 ```
 
 ## Prometheus
