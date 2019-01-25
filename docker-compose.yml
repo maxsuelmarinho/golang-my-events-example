@@ -17,13 +17,17 @@ secrets:
 
 services:
   gitlab:
-    #build: gitlab/
+    build: gitlab/
+    image: maxsuelmarinho/my-events:gitlab-0.1
     #image: gitlab/gitlab-ce:9.1.1-ce.0
-    image: gitlab/gitlab-ce:latest
+    #image: gitlab/gitlab-ce:latest
     container_name: gitlab
     hostname: "peon"
     environment:
       #GITLAB_ROOT_PASSWORD: "g1tl4bs3cr3t"
+      GITLAB_PRIVATE_TOKEN: "my-own-token"
+      GITLAB_GROUP_NAME: "my-events"
+      GITLAB_REPO_NAME: "my-events"
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://peon:30080'
         gitlab_rails['gitlab_shell_ssh_port'] = 30022

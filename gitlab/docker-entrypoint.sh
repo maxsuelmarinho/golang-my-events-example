@@ -4,4 +4,4 @@ echo "========================"
 echo "GITLAB INITIALIZING"
 echo "========================"
 
-sh -c "/assets/wrapper"
+sh -c "/setup-gitlab.sh" & sh -c "/assets/wrapper"
