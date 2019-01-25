@@ -25,6 +25,7 @@ services:
     hostname: "peon"
     environment:
       #GITLAB_ROOT_PASSWORD: "g1tl4bs3cr3t"
+      GITLAB_API_PORT: "30080"
       GITLAB_PRIVATE_TOKEN: "my-own-token"
       GITLAB_GROUP_NAME: "my-events"
       GITLAB_REPO_NAME: "my-events"

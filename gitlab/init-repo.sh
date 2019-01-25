@@ -3,12 +3,13 @@
 privateToken=$1
 groupName="$2"
 repoName="$3"
+apiPort=$4
 
 echo "Verifying if group $groupName already exists..."
-groupId=$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:9090/api/v4/groups?search=$groupName" | jq '.[0].id')
+groupId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/groups?search=$groupName" | jq '.[0].id')"
 
 echo "Verifying if repository $repoName already exists..."
-projectId=$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:9090/api/v4/projects/?search=$repoName" | jq '.[0].id')
+projectId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/projects/?search=$repoName" | jq '.[0].id')"
 
 if [[ $groupId != "null" && $projectId != "null" ]]; then
   echo "Group '$groupName' and repository '$repoName' already exist. Skiping..."
@@ -18,15 +19,15 @@ fi
 # Create a group
 if [[ $groupId == "null" ]]; then
   echo "Group not found. Creating '$groupName' group..."
-  curl --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:9090/api/v4/groups?name=$groupName&path=$groupName" | jq
-  groupId=$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:9090/api/v4/groups?search=$groupName" | jq '.[0].id')
+  curl --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPort/api/v4/groups?name=$groupName&path=$groupName" | jq
+  groupId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/groups?search=$groupName" | jq '.[0].id')"
 fi
 
 # Create a repo
 if [[ $projectId == "null" ]]; then
   echo "Repository not found. Creating '$repoName' repository..."
-  curl --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:9090/api/v3/projects?name=$repoName" | jq
-  projectId=$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:9090/api/v4/projects/?search=$repoName" | jq '.[0].id')
+  curl --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPort/api/v4/projects?name=$repoName" | jq
+  projectId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/projects/?search=$repoName" | jq '.[0].id')"
 fi
 
 if [[ $groupId != "null" || $projectId != "null" ]]; then
@@ -36,5 +37,4 @@ fi
 
 # transfer the repo to the group
 echo "Transfering '$repoName' repository to '$groupName' group..."
-curl --header "PRIVATE-TOKEN: $privateToken" \
-    -X POST "http://localhost:9090/api/v4/groups/$groupId/projects/$projectId" | jq
+curl --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPort/api/v4/groups/$groupId/projects/$projectId" | jq
