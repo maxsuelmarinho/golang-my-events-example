@@ -365,6 +365,12 @@ curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>
 ## Gitlab
 
 ```
-> git remote add gitlab ssh://git@localhost/root/golang-my-events-example.git 
+# List remotes
+> git remote -v
+# Add remote url
+> git remote add gitlab ssh://git@<host>:<port>/golang/golang-my-events-example.git
+# change remote url if needed
+> git remote set-url gitlab ssh://git@<host>:<port>/my-events/my-events.git
+# push repository
 > git push gitlab master:master
 ```
