@@ -35,9 +35,9 @@ while true; do
   sleep 30s;
 done;
 
-echo "Add SSH key to user root"
+echo "Add SSH key to root user"
 userId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/users?username=root" | jq '.[0].id')"
-curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST -F "title=at vagrant" -F "key=$(cat ~/.ssh/id_rsa.pub)" "http://localhost:$apiPort/api/v4/users/$userId/keys" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST -F "title=at vagrant" -F "key=$(cat /root/.ssh/id_rsa.pub)" "http://localhost:$apiPort/api/v4/users/$userId/keys" | jq
 
 echo "Verifying if group $groupName already exists..."
 groupId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/groups?search=$groupName" | jq '.[0].id')"
@@ -70,3 +70,6 @@ fi
 # transfer the repo to the group
 echo "Transfering '$repoName' repository to '$groupName' group..."
 curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPort/api/v4/groups/$groupId/projects/$projectId" | jq
+
+runnersToken="$(curl -s --header "PRIVATE-TOKEN: $privateToken" http://localhost:$apiPort/api/v4/projects/$projectId | jq -r '.runners_token')"
+runnerId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/runners" --form "token=$runnersToken" --form "description=docker-runner" --form "tag_list=docker" --form "run_untagged=true" --form "locked=false") | jq -r '.id'"

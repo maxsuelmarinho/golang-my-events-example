@@ -1,0 +1,15 @@
+---
+build:eventservice:
+  image: golang:1.11.3
+  stage: build
+  before_script:
+    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh    
+    - mkdir -p $GOPATH/src/todo.com
+    - ln -nfs $PWD $GOPATH/src/todo.com/golang-my-events-example
+    - cd $GOPATH/src/todo.com/golang-my-events-example
+    - dep ensure
+  script:
+    - cd ./events-service && CGO_ENABLED=0 go build
+  artifacts:
+    paths:
+      - ./events-service/events-service

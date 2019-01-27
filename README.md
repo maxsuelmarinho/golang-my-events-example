@@ -373,4 +373,7 @@ curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>
 > git remote set-url gitlab ssh://git@<host>:<port>/my-events/my-events.git
 # push repository
 > git push gitlab master:master
+
+# Register a runner
+> docker container exec -it gitlab-runner gitlab-runner register -n --executor "docker" --docker-image ubuntu:16.04 --url http://<host>:<port> --registration-token "<token>" --description "Docker Runner" --tag-list "docker" --run-untagged --locked="false" --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 ```

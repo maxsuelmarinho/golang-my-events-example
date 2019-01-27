@@ -81,3 +81,6 @@ typings/
 .serverless
 
 vendor/
+
+gitlab/id_rsa.pub
+gitlab/runner

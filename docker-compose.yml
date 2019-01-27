@@ -2,7 +2,7 @@ version: '3.1'
 networks:
   my-events:
   monitoring:
-  vcs:
+  cicd:
 
 volumes:
   prometheus-data:
@@ -19,8 +19,6 @@ services:
   gitlab:
     build: gitlab/
     image: maxsuelmarinho/my-events:gitlab-0.1
-    #image: gitlab/gitlab-ce:9.1.1-ce.0
-    #image: gitlab/gitlab-ce:latest
     container_name: gitlab
     hostname: "peon"
     environment:
@@ -28,7 +26,7 @@ services:
       GITLAB_API_PORT: "30080"
       GITLAB_PRIVATE_TOKEN: "my-own-token"
       GITLAB_GROUP_NAME: "golang"
-      GITLAB_REPO_NAME: "golang-my-events"
+      GITLAB_REPO_NAME: "golang-my-events-example"
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://peon:30080'
         gitlab_rails['gitlab_shell_ssh_port'] = 30022
@@ -38,24 +36,26 @@ services:
     volumes:
       - gitlab-config:/etc/gitlab
       - gitlab-data:/var/opt/gitlab
-      - gitlab-logs:/var/log/gitlab      
+      - gitlab-logs:/var/log/gitlab
+      - ./gitlab/id_rsa.pub:/root/.ssh/id_rsa.pub      
     ports:
       - "30080:30080"
-      - "30022:30022"
+      - "30022:22"
     networks:
-      - vcs
+      - cicd
 
   gitlab-runner:
-    image: gitlab/gitlab-runner:v1.11.4
+    image: gitlab/gitlab-runner:latest
     container_name: gitlab-runner
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./gitlab/runner/config:/etc/gitlab-runner
     depends_on:
       - gitlab
     links:
       - gitlab
     networks:
-      - vcs
+      - cicd
 
   # UI: http://localhost:9090
   prometheus:
