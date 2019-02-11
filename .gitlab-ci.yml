@@ -26,7 +26,17 @@ dockerbuild:eventservice:
   dependencies:
     - build:eventservice
   script:
-    - docker container build -t maxsuelmarinho/my-events:events-service-$CI_COMMIT_REF_NAME events-service
+    - docker container build -t maxsuelmarinho/my-events:events-service-${CI_COMMIT_REF_NAME} events-service
+
+publish:eventservice:
+  image: docker:17.04.0-ce
+  stage: publish
+  dependencies:
+    - dockerbuild:eventservice
+  before_script:
+    - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+  script:
+    - docker push maxsuelmarinho/my-events:events-service-${CI_COMMIT_REF_NAME}
   only:
     - tags
    
@@ -51,6 +61,16 @@ dockerbuild:bookingservice:
   dependencies:
     - build:bookingservice
   script:
-    - docker container build -t maxsuelmarinho/my-events:booking-service-$CI_COMMIT_REF_NAME booking-service
+    - docker container build -t maxsuelmarinho/my-events:booking-service-$CI_COMMIT_REF_NAME booking-service   
+
+publish:bookingservice:
+  image: docker:17.04.0-ce
+  stage: publish
+  dependencies:
+    - dockerbuild:bookingservice
+  before_script:
+    - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+  script:
+    - docker push maxsuelmarinho/my-events:booking-service-${CI_COMMIT_REF_NAME}
   only:
-    - tags      
+    - tags
