@@ -375,5 +375,13 @@ curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>
 > git push gitlab master:master
 
 # Register a runner
-> docker container exec -it gitlab-runner gitlab-runner register -n --executor "docker" --docker-image ubuntu:16.04 --url http://<host>:<port> --registration-token "<token>" --description "Docker Runner" --tag-list "docker" --run-untagged --locked="false" --docker-volumes /var/run/docker.sock:/var/run/docker.sock
+> docker container exec -it gitlab-runner gitlab-runner register --non-interactive --url http://<host>:<port> --registration-token "<token>" --executor "docker" --docker-image ubuntu:16.04 --description "Docker Runner" --tag-list "docker" --run-untagged --locked="false" --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 ```
+### Configure autoscaling with docker machine
+
+**install docker machine:**
+```
+base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+  curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+  sudo install /tmp/docker-machine /usr/local/bin/docker-machine
+```  

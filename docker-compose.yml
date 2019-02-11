@@ -50,6 +50,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./gitlab/runner/config:/etc/gitlab-runner
+      #- ./gitlab-runner/config.toml:/etc/gitlab-runner/config.toml
+      #- ./gitlab-runner/config:config:/etc/gitlab-runner
     depends_on:
       - gitlab
     links:

@@ -72,4 +72,5 @@ echo "Transfering '$repoName' repository to '$groupName' group..."
 curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPort/api/v4/groups/$groupId/projects/$projectId" | jq
 
 runnersToken="$(curl -s --header "PRIVATE-TOKEN: $privateToken" http://localhost:$apiPort/api/v4/projects/$projectId | jq -r '.runners_token')"
-runnerId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/runners" --form "token=$runnersToken" --form "description=docker-runner" --form "tag_list=docker" --form "run_untagged=true" --form "locked=false") | jq -r '.id'"
+
+#runnerId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/runners" --form "token=$runnersToken" --form "description=docker-runner" --form "tag_list=docker" --form "run_untagged=true" --form "locked=false") | jq -r '.id'"

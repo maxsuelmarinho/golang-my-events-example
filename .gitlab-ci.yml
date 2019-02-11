@@ -1,4 +1,10 @@
 ---
+stages:
+  - build
+  - dockerbuild
+  - publish
+  - deploy
+
 build:eventservice:
   image: golang:1.11.3
   stage: build
@@ -13,3 +19,38 @@ build:eventservice:
   artifacts:
     paths:
       - ./events-service/events-service
+
+dockerbuild:eventservice:
+  image: docker:17.04.0-ce
+  stage: dockerbuild
+  dependencies:
+    - build:eventservice
+  script:
+    - docker container build -t maxsuelmarinho/my-events:events-service-$CI_COMMIT_REF_NAME events-service
+  only:
+    - tags
+   
+build:bookingservice:
+  image: golang:1.11.3
+  stage: build
+  before_script:
+    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh    
+    - mkdir -p $GOPATH/src/todo.com
+    - ln -nfs $PWD $GOPATH/src/todo.com/golang-my-events-example
+    - cd $GOPATH/src/todo.com/golang-my-events-example
+    - dep ensure
+  script:
+    - cd ./booking-service && CGO_ENABLED=0 go build
+  artifacts:
+    paths:
+      - ./booking-service/booking-service
+
+dockerbuild:bookingservice:
+  image: docker:17.04.0-ce
+  stage: dockerbuild
+  dependencies:
+    - build:bookingservice
+  script:
+    - docker container build -t maxsuelmarinho/my-events:booking-service-$CI_COMMIT_REF_NAME booking-service
+  only:
+    - tags      
