@@ -31,6 +31,7 @@ services:
         external_url 'http://peon:30080'
         gitlab_rails['gitlab_shell_ssh_port'] = 30022
         gitlab_rails['initial_root_password'] = File.read('/run/secrets/gitlab_root_password')
+        gitlab_rails['monitoring_whitelist'] = ['127.0.0.0/8', '172.0.0.0/8', '192.168.0.0/16']
     secrets:
       - gitlab_root_password
     volumes:
@@ -45,8 +46,13 @@ services:
       - cicd
 
   gitlab-runner:
-    image: gitlab/gitlab-runner:latest
+    build: gitlab-runner/
+    image: maxsuelmarinho/my-events:gitlab-runner-0.1
     container_name: gitlab-runner
+    environment:
+      GITLAB_API_URL: "http://gitlab:30080"
+      GITLAB_PRIVATE_TOKEN: "my-own-token"
+      GITLAB_REPO_NAME: "golang-my-events-example"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./gitlab/runner/config:/etc/gitlab-runner
@@ -107,7 +113,7 @@ services:
 
   event-db:
     image: mongo:latest
-    container_name: "events-db"
+    container_name: "event-db"
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
@@ -132,7 +138,7 @@ services:
       - rabbitmq
     environment:
       AMQP_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
-      MONGO_URL: "mongodb://events-db/events"
+      MONGO_URL: "mongodb://event-db/events"
       LISTEN_URL: "0.0.0.0:8181"
     networks:
       - my-events
@@ -167,6 +173,7 @@ services:
   frontend:
     build: myevents-frontend/
     image: maxsuelmarinho/my-events:frontend-0.4
+    container_name: "frontend"
     ports:
       - "8080:80"
     depends_on:

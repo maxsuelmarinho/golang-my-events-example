@@ -7,5 +7,4 @@ COPY ./setup-gitlab.sh /setup-gitlab.sh
 COPY ./init-repo.sh /init-repo.sh
 RUN chmod +x /docker-entrypoint.sh /setup-gitlab.sh /init-repo.sh
 
-
 CMD ["/docker-entrypoint.sh"]

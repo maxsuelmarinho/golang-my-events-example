@@ -9,6 +9,9 @@ spec:
       labels:
         myevents/app: events
         myevents/tier: api
+      annotations:
+        prometheus.io/scrape: true
+        prometheus.io/port: 18181
     spec:
       containers:
       - name: api
@@ -17,6 +20,8 @@ spec:
         ports:
         - containerPort: 8181
           name: http
+        - containerPort: 18181
+          name: metrics
         env:
         - name: MONGO_URL
           value: mongodb://events-db/events
