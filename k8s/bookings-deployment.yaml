@@ -10,8 +10,8 @@ spec:
         myevents/app: bookings
         myevents/tier: api
       annotations:
-        prometheus.io/scrape: true
-        prometheus.io/port: 18282
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '18282'
     spec:
       containers:
       - name: api
@@ -27,3 +27,5 @@ spec:
           value: mongodb://bookings-db/bookings
         - name: AMQP_BROKER_URL
           value: amqp://guest:guest@amqp-broker:5672/
+      imagePullSecrets:
+      - name: my-private-registry
