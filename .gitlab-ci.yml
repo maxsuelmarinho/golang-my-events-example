@@ -34,13 +34,13 @@ publish:eventservice:
   dependencies:
     - dockerbuild:eventservice
   before_script:
-    - echo "DOCKER_USERNAME: $DOCKER_USERNAME"
-    - echo "DOCKER_PASSWORD: $DOCKER_PASSWORD"
+    - echo "DOCKER_USERNAME $DOCKER_USERNAME"
+    - echo "DOCKER_PASSWORD $DOCKER_PASSWORD"
     - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   script:
     - docker push maxsuelmarinho/my-events:events-service-${CI_COMMIT_REF_NAME}
-  only:
-    - tags
+#  only:
+#    - tags
 
 deploy:eventservice:
   image: alpine:3.5
@@ -49,10 +49,10 @@ deploy:eventservice:
     - publish:eventservice
   environment: production
   before_script:
-    - echo "KUBE_CA_CERT: $KUBE_CA_CERT"
-    - echo "KUBE_TOKEN: $KUBE_TOKEN"
-    - echo "KUBE_CLUSTER: $KUBE_CLUSTER"
-    - echo "KUBE_SERVER: $KUBE_SERVER"
+    - echo "KUBE_CA_CERT $KUBE_CA_CERT"
+    - echo "KUBE_TOKEN $KUBE_TOKEN"
+    - echo "KUBE_CLUSTER $KUBE_CLUSTER"
+    - echo "KUBE_SERVER $KUBE_SERVER"
     - apk add --update openssl curl
     - version=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt); wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${version}/bin/linux/amd64/kubectl && chmod +x /usr/local/bin/kubectl
     - echo "${KUBE_CA_CERT}" > ./ca.crt
@@ -62,8 +62,8 @@ deploy:eventservice:
     - kubectl config use-context "${KUBE_CLUSTER}"
   script:
     - kubectl set image deployment/events-service api=maxsuelmarinho/my-events:events-service-${CI_COMMIT_REF_NAME}
-  only:
-    - tags
+#  only:
+#    - tags
 
 build:bookingservice:
   image: golang:1.11.3
@@ -97,5 +97,5 @@ publish:bookingservice:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   script:
     - docker push maxsuelmarinho/my-events:booking-service-${CI_COMMIT_REF_NAME}
-  only:
-    - tags
+#  only:
+#    - tags
