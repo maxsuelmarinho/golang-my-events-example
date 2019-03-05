@@ -50,7 +50,7 @@ services:
     image: maxsuelmarinho/my-events:gitlab-runner-0.1
     container_name: gitlab-runner
     environment:
-      GITLAB_API_URL: "http://gitlab:30080"
+      GITLAB_API_URL: "http://peon:30080"
       GITLAB_PRIVATE_TOKEN: "my-own-token"
       GITLAB_REPO_NAME: "golang-my-events-example"
     volumes:
