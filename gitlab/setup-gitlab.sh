@@ -36,10 +36,10 @@ while true; do
     continue;
   fi
 
+  userId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/users?username=root" | jq '.[0].id')";
   keysCount="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/users/$userId/keys" | jq length)";
   if [[ -z $keysCount || $keysCount != "1" ]]; then
-    echo "Add SSH key to root user";
-    userId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" "http://localhost:$apiPort/api/v4/users?username=root" | jq '.[0].id')";
+    echo "Add SSH key to root user";    
     curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST -F "title=at vagrant" -F "key=$(cat /root/.ssh/id_rsa.pub)" "http://localhost:$apiPort/api/v4/users/$userId/keys" | jq;
   fi
 
