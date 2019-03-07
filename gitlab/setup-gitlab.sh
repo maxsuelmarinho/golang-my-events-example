@@ -74,3 +74,10 @@ curl -s --header "PRIVATE-TOKEN: $privateToken" -X POST "http://localhost:$apiPo
 runnersToken="$(curl -s --header "PRIVATE-TOKEN: $privateToken" http://localhost:$apiPort/api/v4/projects/$projectId | jq -r '.runners_token')"
 
 #runnerId="$(curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/runners" --form "token=$runnersToken" --form "description=docker-runner" --form "tag_list=docker" --form "run_untagged=true" --form "locked=false") | jq -r '.id'"
+
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=DOCKER_USERNAME" --form "value=${DOCKER_USERNAME}" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=DOCKER_PASSWORD" --form "value=${DOCKER_PASSWORD}" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=KUBE_TOKEN" --form "value=${KUBE_TOKEN}" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=KUBE_CA_CERT" --form "value=${KUBE_CA_CERT}" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=KUBE_SERVER" --form "value=${KUBE_SERVER}" | jq
+curl -s --header "PRIVATE-TOKEN: $privateToken" --request POST "http://localhost:$apiPort/api/v4/projects/$projectId/variables" --form "key=KUBE_CLUSTER" --form "value=${KUBE_CLUSTER}" | jq
