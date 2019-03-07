@@ -3,6 +3,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: prometheus
+  namespace: monitoring
 spec:
   serviceName: prometheus
   replicas: 1
@@ -14,7 +15,14 @@ spec:
       serviceAccountName: prometheus
       containers:
       - name: prometheus
-        image: prom/prometheus:v1.6.1
+        image: prom/prometheus:v2.7.1
+        args:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--storage.tsdb.path=/prometheus"
+          - "--web.console.libraries=/etc/prometheus/console_libraries"
+          - "--web.console.templates=/etc/prometheus/consoles"
+          - "--storage.tsdb.retention.time=200h"
+          - "--web.enable-lifecycle"
         ports:
         - containerPort: 9090
           name: http
