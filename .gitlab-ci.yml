@@ -53,8 +53,9 @@ deploy:eventservice:
     - echo "KUBE_TOKEN $KUBE_TOKEN"
     - echo "KUBE_CLUSTER $KUBE_CLUSTER"
     - echo "KUBE_SERVER $KUBE_SERVER"
-    - apk add --update openssl curl
-    - version=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt); wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${version}/bin/linux/amd64/kubectl && chmod +x /usr/local/bin/kubectl
+    - apk add --update openssl wget curl
+    - wget -O /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x /usr/local/bin/kubectl
     - echo "${KUBE_CA_CERT}" > ./ca.crt
     - ls /usr/local/bin/
     - /usr/local/bin/kubectl config set-credentials gitlab-ci --token="${KUBE_TOKEN}"
