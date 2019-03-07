@@ -350,6 +350,19 @@ Events:              <none>
 > echo "<ca.crt from above>" | base64 --decode
 ```
 
+**Start Proxy:**
+
+```
+kubectl proxy --address='0.0.0.0' --disable-filter=true
+# http://<url>:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
+
+# To stop Proxy execution when it's running on background:
+# 1. Find the process ID:
+netstat -tulp | grep kubectl
+# kill the process
+kill -15 <pid>
+```
+
 ## Travis
 
 **Useful commands:**

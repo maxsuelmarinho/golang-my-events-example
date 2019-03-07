@@ -8,6 +8,8 @@ caCertificateEncoded=$(kubectl get secret $serviceAccountToken -o=yaml | awk '/c
 tokenDecoded=$(echo "$tokenEncoded" | base64 --decode)
 caCertificateDecoded=$(echo "$caCertificateEncoded" | base64 --decode)
 
+kubectl create clusterrolebinding gitlab-cluster-admin --clusterrole=cluster-admin --serviceaccount=default:gitlab
+
 # DOCKER_USERNAME
 # DOCKER_PASSWORD
 # KUBE_TOKEN
