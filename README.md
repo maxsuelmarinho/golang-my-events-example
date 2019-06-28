@@ -353,8 +353,9 @@ Events:              <none>
 **Start Proxy:**
 
 ```
-kubectl proxy --address='0.0.0.0' --disable-filter=true
+kubectl proxy --address='0.0.0.0' --disable-filter=true --port=8001
 # http://<url>:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
+# http://<url>:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 
 # To stop Proxy execution when it's running on background:
 # 1. Find the process ID:
