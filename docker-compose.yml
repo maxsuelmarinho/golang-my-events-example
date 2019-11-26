@@ -150,7 +150,9 @@ services:
       - my-events
 
   booking-service:
-    build: booking-service/
+    build:
+      context: booking-service/
+      dockerfile: Dockerfile.scratch
     image: maxsuelmarinho/my-events:booking-service-0.1
     ports:
       - "8282:8282"

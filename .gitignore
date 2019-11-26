@@ -1,8 +1,10 @@
 # Golang project
 /events-service/events-service
 /events-service/*.exe
+/events-service/main
 /mongo
 /booking-service/*.exe
+/booking-service/main
 /booking-service/booking-service
 
 # Node.js project
