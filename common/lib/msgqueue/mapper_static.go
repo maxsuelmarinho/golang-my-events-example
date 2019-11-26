@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/contracts"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/contracts"
 
 	"github.com/mitchellh/mapstructure"
 )

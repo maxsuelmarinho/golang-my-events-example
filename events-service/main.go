@@ -6,12 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/configuration"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
+	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue/kafka"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence/dblayer"
 	"github.com/maxsuelmarinho/golang-my-events-example/events-service/rest"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/configuration"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/kafka"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
 
 	"github.com/Shopify/sarama"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/helper/kafka"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/helper/kafka"
 
 	"github.com/Shopify/sarama"
 )

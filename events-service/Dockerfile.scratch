@@ -1,12 +1,20 @@
-FROM scratch
-
-ENV LISTEN_URL=0.0.0.0:8181
-
-COPY events-service /app/appservice
-COPY cert.pem /app/cert.pem
-COPY key.pem /app/key.pem
-
+FROM golang:alpine as builder
+RUN apk update && apk add git ca-certificates tzdata
+RUN adduser -D -g '' appuser
 WORKDIR /app
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -v -installsuffix cgo -o service ./main.go
 
+FROM scratch
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /etc/passwd /etc/passwd
+WORKDIR /app
+COPY --from=builder /app/cert.pem /app/cert.pem
+COPY --from=builder /app/key.pem /app/key.pem
+COPY --from=builder /app/service ./
+USER appuser
+ENV LISTEN_URL=0.0.0.0:8181
 EXPOSE 8181
-ENTRYPOINT ["/app/appservice"]
+ENTRYPOINT ["/app/service"]

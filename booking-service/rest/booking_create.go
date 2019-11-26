@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/contracts"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/contracts"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence"
 
 	"github.com/gorilla/mux"
 )

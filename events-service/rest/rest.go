@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"

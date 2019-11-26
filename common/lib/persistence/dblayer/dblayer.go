@@ -1,8 +1,8 @@
 package dblayer
 
 import (
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/mongolayer"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence/mongolayer"
 )
 
 type DBTYPE string

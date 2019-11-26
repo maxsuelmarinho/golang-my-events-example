@@ -7,10 +7,10 @@ import (
 
 	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/listener"
 	"github.com/maxsuelmarinho/golang-my-events-example/booking-service/rest"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/configuration"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/configuration"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
+	msgqueue_amqp "github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence/dblayer"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/streadway/amqp"

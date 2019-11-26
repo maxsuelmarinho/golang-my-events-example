@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	amqphelper "github.com/maxsuelmarinho/golang-my-events-example/lib/helper/amqp"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
+	amqphelper "github.com/maxsuelmarinho/golang-my-events-example/common/lib/helper/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
 
 	"github.com/streadway/amqp"
 )

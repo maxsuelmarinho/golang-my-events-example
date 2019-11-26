@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence/dblayer"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence/dblayer"
 )
 
 var (

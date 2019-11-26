@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/amqp"
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/msgqueue/kafka"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue/amqp"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/msgqueue/kafka"
 )
 
 func NewEventListenerFromEnvironment() (msgqueue.EventListener, error) {

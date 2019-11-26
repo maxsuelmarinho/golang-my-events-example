@@ -4,7 +4,7 @@ import (
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/maxsuelmarinho/golang-my-events-example/lib/persistence"
+	"github.com/maxsuelmarinho/golang-my-events-example/common/lib/persistence"
 )
 
 const (
