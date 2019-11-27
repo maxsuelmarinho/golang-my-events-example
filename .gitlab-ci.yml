@@ -11,7 +11,7 @@ build:eventservice:
   before_script:
     - cd ./events-service && go mod download
   script:
-    - cd ./events-service && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -v -installsuffix cgo -o events-service ./main.go
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -v -installsuffix cgo -o events-service ./main.go
   artifacts:
     paths:
       - ./events-service/events-service
