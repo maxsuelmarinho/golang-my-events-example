@@ -6,16 +6,12 @@ stages:
   - deploy
 
 build:eventservice:
-  image: golang:1.11.3
+  image: golang:alpine
   stage: build
   before_script:
-    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh    
-    - mkdir -p $GOPATH/src/todo.com
-    - ln -nfs $PWD $GOPATH/src/todo.com/golang-my-events-example
-    - cd $GOPATH/src/todo.com/golang-my-events-example
-    - dep ensure
+    - cd ./events-service && go mod download
   script:
-    - cd ./events-service && CGO_ENABLED=0 go build
+    - cd ./events-service && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -v -installsuffix cgo -o events-service ./main.go
   artifacts:
     paths:
       - ./events-service/events-service
