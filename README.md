@@ -380,16 +380,27 @@ curl --insecure --cert-type pem --cert client.crt --key client.key https://<url>
 
 ```
 # List remotes
-> git remote -v
+$ git remote -v
 # Add remote url
-> git remote add gitlab ssh://git@<host>:<port>/golang/golang-my-events-example.git
+$ git remote add gitlab ssh://git@<host>:<port>/golang/golang-my-events-example.git
 # change remote url if needed
-> git remote set-url gitlab ssh://git@<host>:<port>/my-events/my-events.git
+$ git remote set-url gitlab ssh://git@<host>:<port>/my-events/my-events.git
 # push repository
-> git push gitlab master:master
+$ git push gitlab master:master
 
 # Register a runner
-> docker container exec -it gitlab-runner gitlab-runner register --non-interactive --url http://<host>:<port> --registration-token "<token>" --executor "docker" --docker-image ubuntu:16.04 --description "Docker Runner" --tag-list "docker" --run-untagged --locked="false" --docker-volumes /var/run/docker.sock:/var/run/docker.sock
+$ docker container exec -it gitlab-runner \
+  gitlab-runner register \
+  --non-interactive \
+  --url http://<host>:<port> \
+  --registration-token "<token>" \
+  --executor "docker" \
+  --docker-image ubuntu:16.04 \
+  --description "Docker Runner" \
+  --tag-list "docker" \
+  --run-untagged \
+  --locked="false" \
+  --docker-volumes /var/run/docker.sock:/var/run/docker.sock
 ```
 ### Configure autoscaling with docker machine
 

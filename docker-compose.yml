@@ -16,6 +16,9 @@ secrets:
     file: ./gitlab/root_password.txt
 
 services:
+  # Credentials:
+  # username: root
+  # pass: g1tl4bs3cr3t
   gitlab:
     build: gitlab/
     image: maxsuelmarinho/my-events:gitlab-0.1
@@ -141,6 +144,8 @@ services:
       context: events-service/
       dockerfile: Dockerfile.scratch
     image: maxsuelmarinho/my-events:events-service-0.1
+    container_name: event-service
+    restart: on-failure
     ports:
       - "8181:8181"
       - "18181:18181"
@@ -160,6 +165,8 @@ services:
       context: booking-service/
       dockerfile: Dockerfile.scratch
     image: maxsuelmarinho/my-events:booking-service-0.1
+    container_name: booking-service
+    restart: on-failure
     ports:
       - "8282:8282"
       - "18282:18282"

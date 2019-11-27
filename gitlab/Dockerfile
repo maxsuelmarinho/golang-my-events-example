@@ -1,4 +1,4 @@
-FROM gitlab/gitlab-ce:latest
+FROM gitlab/gitlab-ce:11.6.10-ce.0
 
 RUN apt-get update -y
 RUN apt-get install -y jq
