@@ -59,16 +59,12 @@ deploy:eventservice:
 #    - tags
 
 build:bookingservice:
-  image: golang:1.11.3
+  image: golang:alpine
   stage: build
   before_script:
-    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh    
-    - mkdir -p $GOPATH/src/todo.com
-    - ln -nfs $PWD $GOPATH/src/todo.com/golang-my-events-example
-    - cd $GOPATH/src/todo.com/golang-my-events-example
-    - dep ensure
+    - cd ./booking-service && go mod download
   script:
-    - cd ./booking-service && CGO_ENABLED=0 go build
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -v -installsuffix cgo -o booking-service ./main.go
   artifacts:
     paths:
       - ./booking-service/booking-service
