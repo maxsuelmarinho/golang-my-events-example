@@ -1,5 +1,10 @@
 #!/bin/bash -x
 
+privateToken=$GITLAB_PRIVATE_TOKEN
+groupName=$GITLAB_GROUP_NAME
+repositories=$GITLAB_REPO_NAMES
+apiPort=$GITLAB_API_PORT
+
 echo "================================"
 echo "Wait for Gitlab warms up..."
 echo "================================"
@@ -11,7 +16,7 @@ apiPort=$GITLAB_API_PORT
 
 while true; do
   echo "waiting Gitlab warms up...";
-  echo "$GITLAB_PRIVATE_TOKEN $GITLAB_GROUP_NAME $GITLAB_REPO_NAME"
+  echo "$GITLAB_PRIVATE_TOKEN $GITLAB_GROUP_NAME $GITLAB_REPO_NAMES"
   /opt/gitlab/bin/gitlab-rails -v
   result=$?
   if [[ $result == 0 ]] && [[ ! -z $(/opt/gitlab/bin/gitlab-rails r "user=User.where(id: 1).first; print user") ]]; then
